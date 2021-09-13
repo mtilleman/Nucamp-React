@@ -28,7 +28,7 @@ class CommentForm extends Component {
         this.state = {
             rating: '',
             author: '',
-            commentMessage: '',
+            text: '',
             touched: {
                 rating: false,
                 author: false,
@@ -42,8 +42,8 @@ class CommentForm extends Component {
     }
 
     handleSubmit(values) {
-        console.log('Current state is: ' + JSON.stringify(values));
-        alert('Current state is: ' + JSON.stringify(values));
+        this.toggleModal();
+        this.props.addComment(this.props.campsiteId, values.rating, values.author, values.text);
     }
 
     toggleModal() {
@@ -127,9 +127,9 @@ class CommentForm extends Component {
                                 </Col>
                             </div>
                             <div className="form-group">
-                                <Label htmlFor="commentMessage" md={2}>Comment</Label>
+                                <Label htmlFor="text" md={2}>Comment</Label>
                                 <Col>
-                                    <Control.textarea model=".commentMessage" id="commentMessage" name="commentMessage"
+                                    <Control.textarea model=".text" id="text" name="text"
                                         rows="6"
                                         className="form-control"
                                     />
@@ -146,7 +146,7 @@ class CommentForm extends Component {
     }
 }
 
-function RenderComments({comments}) {
+function RenderComments({comments, addComment, campsiteId}) {
     if(comments) {
         return(
             <div className="col-md-5 m-1">
@@ -159,7 +159,7 @@ function RenderComments({comments}) {
                         </div>
                     );
                 })}
-                <CommentForm />
+                <CommentForm campsiteId={campsiteId} addComment={addComment} />
             </div>
         );
     }
@@ -182,7 +182,11 @@ function CampsiteInfoComponent(props) {
                 </div>
                 <div className="row">
                     <RenderCampsite campsite={props.campsite} />
-                    <RenderComments comments={props.comments} />
+                    <RenderComments 
+                        comments={props.comments}
+                        addComment={props.addComment}
+                        campsiteId={props.campsite.id}
+                    />
                 </div>
             </div>
         );
